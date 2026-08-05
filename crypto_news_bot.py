@@ -33,7 +33,9 @@ POLL_SECONDS = int(os.environ.get("POLL_SECONDS", "300"))
 # Verify each of these actually returns XML before trusting it.
 # Feed URLs move. Pull them from each site's footer.
 RSS_FEEDS = [
-    # "https://example-crypto-site.com/rss",
+    "https://cointelegraph.com/rss",
+    "https://www.coindesk.com/arc/outboundfeeds/rss/",
+    "https://decrypt.co/feed",
 ]
 
 STATE_PATH = pathlib.Path(os.environ.get("STATE_PATH", "seen.json"))
@@ -90,7 +92,9 @@ def fetch_rss() -> list:
     items = []
     for feed_url in RSS_FEEDS:
         try:
-            parsed = feedparser.parse(feed_url)
+            parsed = feedparser.parse(
+                feed_url, agent="Mozilla/5.0 (compatible; newsbot/1.0)"
+            )
         except Exception as exc:
             print(f"feed failed {feed_url}: {exc}", file=sys.stderr)
             continue
